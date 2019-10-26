@@ -153,32 +153,32 @@ def research(allComponents):
     pass
 
     
-    def study(allPotions):
-        studying = True
-        print('\nALL POTIONS\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        names = {p.name for p in allPotions.values()}
-        col = 0
-        x = 0
-        line = ''
-        for n in names:
-            line += '{:20}'.format(n)
-            col +=1
-            x += 1
-            if col >= 4 or x == len(names):
-                print(line)
-                line = ''
-                col = 0
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
-        while studying:
-            keyString = input('Search for an potion by Name, or Key Aspect seperated by commas(,)\n or enter \"M\" to return to the Main Menu: ')
-            if keyString == 'm' or keyString == 'M':
-                break
-            keywords = [x.strip().lower() for x in keyString.split(',')]
-            matches = []
-            for p in allPotions.values():
-                if all((w in c.tags) for w in keywords):
-                    matches.append(p)
-        
+def study(allPotions):
+    studying = True
+    print('\nALL POTIONS\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    names = {p.name for p in allPotions.values()}
+    col = 0
+    x = 0
+    line = ''
+    for n in names:
+        line += '{:20}'.format(n)
+        col +=1
+        x += 1
+        if col >= 4 or x == len(names):
+            print(line)
+            line = ''
+            col = 0
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
+    while studying:
+        keyString = input('Search for an potion by Name, or Key Aspect seperated by commas(,)\n or enter \"M\" to return to the Main Menu: ')
+        if keyString == 'm' or keyString == 'M':
+            break
+        keywords = [x.strip().lower() for x in keyString.split(',')]
+        matches = []
+        for p in allPotions.values():
+            if all((w in c.tags) for w in keywords):
+                matches.append(p)
+      
         if matches == []:
             print('----------')
             print('No Matches')
@@ -191,7 +191,7 @@ def research(allComponents):
             print('----------')
             print('matching potions: ',[p.name for p in matches])
             print('----------')
-        pass
+    pass
 
 
 if __name__=='__main__':
