@@ -75,7 +75,8 @@ class Potion:
         return all([( max(r) >= cauldren[a] and cauldren[a] >= min(r)) for r,a in self.recipe.items()])
     
     
-def print_menu():
+def print_menu(debugToggle):
+    if debugToggle: print("DEBUGGING MOD")
     print('Alchemy Prototype Menu\n---------------')
     print('  V ~ View Aspects')
     print('  R ~ Research Components')
@@ -85,7 +86,7 @@ def print_menu():
     valid = False
     while valid == False:
         opt = input('Choose an option: ')
-        if opt in 'vrsbqVRSBQ':
+        if opt in 'vrsbqzVRSBQZ':
             valid = True
             break
         else:
@@ -111,9 +112,8 @@ def print_aspects(allAspects):
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
     pass
 
-  
-def research(allComponents):
-    researching = True
+
+def print_components():
     print('\nALL POTION COMPONENTS\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     names = {c.name for c in allComponents.values()}
     col = 0
@@ -128,6 +128,11 @@ def research(allComponents):
             line = ''
             col = 0
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
+    
+    
+def research(allComponents):
+    researching = True
+    print_components()
     while researching:
         keyString = input('Search for an aspect by Name, location, Tier, and/or Aspects seperated by commas(,)\n or enter \"M\" to return to the Main Menu: ')
         if keyString == 'm' or keyString == 'M':
@@ -176,7 +181,7 @@ def study(allPotions):
         keywords = [x.strip().lower() for x in keyString.split(',')]
         matches = []
         for p in allPotions.values():
-            if all((w in c.tags) for w in keywords):
+            if all(((w in p.tags) for w in keywords)):
                 matches.append(p)
       
         if matches == []:
@@ -191,6 +196,74 @@ def study(allPotions):
             print('----------')
             print('matching potions: ',[p.name for p in matches])
             print('----------')
+    pass
+
+
+def print_graph(inputDict):
+    height = max(inputDict.values())
+    for lvl in range(height+1):
+        line = ''
+        for k in sorted(list(inputDict.keys())):
+            if inputDict[k] > height-lvl:
+                line += '{:10}'.format('-----')
+            else:
+                line += '{:10}'.format('')
+        print(line)
+    l1 = ''
+    l2 = ''
+    for k in sorted(list(inputDict.keys())):
+        l1 += '__________'
+        l2 += '{:10}'.format(k)
+    print(l1)
+    print(l2)
+    pass
+
+def brewPotion(allComponents,allPotions,debugToggle):
+    print_components()
+    cauldren = {}
+    for i in range(3):
+        while 1:
+            addition = None
+            name_adition = input('Add component {}: '.format(i + 1))
+            for c in allComponents.values():
+                if c.name.lower() == name_adition.lower():
+                    addition = c
+            if addition == None:
+                print('--Invalid component name--')
+            else:
+                break
+        cauldren += addition
+        print_graph(cauldren)
+    answ = input('Brew this Potion?(Y/N): ')
+    for a in cauldren.keys():
+        if cauldren[a] == max(cauldren.values()):
+            keyAsp = a
+            break
+    
+    if answ in 'Yy':
+        found = False
+        for p in allPotions.values():
+            if keyAsp == p.keyAspect:
+                found = True
+                if debugToggle:
+                    print('Attempting to brew {}...'.format(p.name))
+                if p.brew(cauldren):
+                    print('You succesfully brewed {}!'.format(p.name))
+                    break
+                else:
+                    print('hmm... that recipe didn\'t work')
+                    break
+        if not found:
+            print('A potion for {} has not yet been implemented'.format(keyAsp))
+        opt = input('Try again?(Y/N): ')
+        if opt in 'Yy':
+            brewPotion(allComponents,allPotions,debugToggle)
+        else:
+            print('returning to Main Menu...')
+            pass
+    else:
+        print('returning to Main Menu...')
+        pass
     pass
 
 
@@ -243,10 +316,10 @@ if __name__=='__main__':
         potionAspects.add(p.keyAspect)
     
     #assert potionAspects == componentAspects, "Error P and C aspects don't agree"
-    
+    debugToggle = False
     menu = True
     while menu:
-        opt = print_menu()
+        opt = print_menu(debugToggle)
         
         if opt in 'vV':
             print_aspects(componentAspects)
@@ -258,10 +331,12 @@ if __name__=='__main__':
             study(allPotions)
             continue
         elif opt in 'bB':
-            pass
+            brewPotion(allComponents,allPotions,debugToggle)
         elif opt in 'qQ':
             menu = False
             break
+        elif opt in 'zZ':
+            debugToggle = not debugToggle
         else:
             raise ValueError
         
