@@ -3,6 +3,7 @@ Created on Oct 23, 2019
 
 @author: TorchStone
 '''
+
 class Component:
     
     def __init__(self,name, location, tier, aspects):
@@ -16,6 +17,8 @@ class Component:
         self.location = location
         self.tier = tier-1 #tier is stored 0 based
         self.aspects = aspects
+        self.tags = {name.lower(), location.lower(), str(tier)}
+        self.tags.update( { k.lower() for k in aspects.keys()} )
     
         
     def __str__(self):
@@ -63,30 +66,153 @@ class Potion:
         self.keyAspect = keyAspect
         self.recipe = recipe
         self.rRecipe = rRecipe
+        self.tags = {name.lower(), keyAspect.lower()}
+        
     def __str__(self):
         return '{}\n  is associated with {}\n  the recipe is {}\n  and can be brewed with {}'.format(self.name,self.keyAspect,self.recipe,self.rRecipe)
     def brew(self, cauldren):
         assert type(cauldren) == dict, 'Error: Input must be a dictionary'
         return all([( max(r) >= cauldren[a] and cauldren[a] >= min(r)) for r,a in self.recipe.items()])
+    
+    
+def print_menu():
+    print('Alchemy Prototype Menu\n---------------')
+    print('  V ~ View Aspects')
+    print('  R ~ Research Components')
+    print('  S ~ Study Potions')
+    print('  B ~ Brew a Potion')
+    print('  Q ~ Quit\n---------------')
+    valid = False
+    while valid == False:
+        opt = input('Choose an option: ')
+        if opt in 'vrsbqVRSBQ':
+            valid = True
+            break
+        else:
+            print ('Invalid Option')
+            
+    return opt
+    
+    
+def print_aspects(allAspects):    
+    atl = set(allAspects)
+    col = 0
+    print('\nALL ASPECTS\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    x = 0
+    line = ''
+    for n in atl:
+        line += '{:15}'.format(n)
+        col +=1
+        x += 1
+        if col >= 4 or x == len(atl):
+            print(line)
+            line = ''
+            col = 0
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
+    pass
+
+  
+def research(allComponents):
+    researching = True
+    print('\nALL POTION COMPONENTS\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    names = {c.name for c in allComponents.values()}
+    col = 0
+    x = 0
+    line = ''
+    for n in names:
+        line += '{:20}'.format(n)
+        col +=1
+        x += 1
+        if col >= 4 or x == len(names):
+            print(line)
+            line = ''
+            col = 0
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
+    while researching:
+        keyString = input('Search for an aspect by Name, location, Tier, and/or Aspects seperated by commas(,)\n or enter \"M\" to return to the Main Menu: ')
+        if keyString == 'm' or keyString == 'M':
+            break
+        keywords = [x.strip().lower() for x in keyString.split(',')]
+        matches = []
+        for c in allComponents.values():
+            if all((w in c.tags) for w in keywords):
+                matches.append(c)
+        
+        if matches == []:
+            print('----------')
+            print('No Matches')
+            print('----------')
+        elif len(matches) == 1:
+            print('----------')
+            print(matches[0])
+            print('----------')
+        else:
+            print('----------')
+            print('matching components: ',[c.name for c in matches])
+            print('----------')
+    pass
+
+    
+    def study(allPotions):
+        studying = True
+        print('\nALL POTIONS\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        names = {p.name for p in allPotions.values()}
+        col = 0
+        x = 0
+        line = ''
+        for n in names:
+            line += '{:20}'.format(n)
+            col +=1
+            x += 1
+            if col >= 4 or x == len(names):
+                print(line)
+                line = ''
+                col = 0
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
+        while studying:
+            keyString = input('Search for an potion by Name, or Key Aspect seperated by commas(,)\n or enter \"M\" to return to the Main Menu: ')
+            if keyString == 'm' or keyString == 'M':
+                break
+            keywords = [x.strip().lower() for x in keyString.split(',')]
+            matches = []
+            for p in allPotions.values():
+                if all((w in c.tags) for w in keywords):
+                    matches.append(p)
+        
+        if matches == []:
+            print('----------')
+            print('No Matches')
+            print('----------')
+        elif len(matches) == 1:
+            print('----------')
+            print(matches[0])
+            print('----------')
+        else:
+            print('----------')
+            print('matching potions: ',[p.name for p in matches])
+            print('----------')
+        pass
+
+
 if __name__=='__main__':
     allComponents = {}
     
     ##CITY##
-    allComponents['000'] = Component('Milk', 'City', 1, {"Terra":2, "Victus": 1})
-    allComponents['001'] = Component('Water', 'City', 1, {"Aqua":3})
-    allComponents['002'] = Component('Salt', 'City', 1, {"Terra":1, "Vitreus": 2})
-    allComponents['010'] = Component('Pitch', 'City', 2, {"Tenebrae":3, "Vinculum": 1, "Instramentum":1})
-    allComponents['011'] = Component('Saltpetre', 'City', 2, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['012'] = Component('Phosphorus', 'City', 2, {"Lux":4, "Metalum": 2})
-    allComponents['020'] = Component('Quicksilver', 'City', 3, {"Metalum":2, "Motus": 6, "Venenum":2})
-    allComponents['021'] = Component('Sulfur', 'City', 3, {"Ignis":3, "Potentia": 3, "Telum":3})
-    allComponents['022'] = Component('Arsenic', 'City', 3, {"Venenum":6, "Mortus": 3})
+    allComponents['000'] = Component('Milk', 'City', 1, {"Terra":2, "Victus": 3})
+    allComponents['001'] = Component('Water', 'City', 1, {"Aqua":5})
+    allComponents['002'] = Component('Salt', 'City', 1, {"Terra":2, "Vitreus": 3})
+    allComponents['010'] = Component('Pitch', 'City', 2, {"Tenebrae":5, "Vinculum": 2, "Instramentum":3})
+    allComponents['011'] = Component('Saltpetre', 'City', 2, {"Vitreus":2, "Potentia": 5, "Victus":3})
+    allComponents['012'] = Component('Phosphorus', 'City', 2, {"Lux": 7, "Metalum": 3})
+    allComponents['020'] = Component('Quicksilver', 'City', 3, {"Metalum":2, "Motus": 8, "Venenum":5})
+    allComponents['021'] = Component('Sulfur', 'City', 3, {"Ignis":5, "Potentia": 6, "Telum":4})
+    allComponents['022'] = Component('Arsenic', 'City', 3, {"Venenum":7, "Mortus": 3, "Telum":5})
     
     ##WILDS##
-    allComponents['100'] = Component('lavander', 'Wilds', 1, {"Herba":2, "Victus": 1})
-    allComponents['101'] = Component('Peppermint', 'Wilds', 1, {"Herba":2, "Gelum": 1})
-    allComponents['102'] = Component('honey', 'Wilds', 1, {"Vinculum":1, "Fames": 2})
-    allComponents['110'] = Component('Galena', 'Wilds', 2, {"Metalum":3, "Permutatio": 3})
+    allComponents['100'] = Component('lavander', 'Wilds', 1, {"Herba":2, "Victus": 3})
+    allComponents['101'] = Component('Peppermint', 'Wilds', 1, {"Herba":2, "Gelum": 3})
+    allComponents['102'] = Component('honey', 'Wilds', 1, {"Vinculum":1, "Fames": 2, "Aer": 2})
+    allComponents['110'] = Component('Galena', 'Wilds', 2, {"Metalum":3, "Praecantatio": 5, "Venenum":2})
     allComponents['111'] = Component('Magnetite', 'Wilds', 2, {"Metalum":2, "Instramentum": 4})
     allComponents['112'] = Component('Cinnabar', 'Wilds', 2, {"Tutamen":4, "Metalum": 2})
     allComponents['120'] = Component('Griffon Talon', 'Wilds', 3, {"Telum":4, "voltus": 4, "Aer":1})
@@ -94,20 +220,48 @@ if __name__=='__main__':
     allComponents['122'] = Component('Treant Bark', 'Wilds', 3, {"Arbor":5, "Praecantatio": 3})
     
     ##Dungeon##
-    allComponents['200'] = Component('Saltpetre', 'Dungeon', 1, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['201'] = Component('Saltpetre', 'Dungeon', 1, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['202'] = Component('Saltpetre', 'Dungeon', 1, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['210'] = Component('Saltpetre', 'Dungeon', 2, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['211'] = Component('Saltpetre', 'Dungeon', 2, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['212'] = Component('Saltpetre', 'Dungeon', 2, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['220'] = Component('Saltpetre', 'Dungeon', 3, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['221'] = Component('Saltpetre', 'Dungeon', 3, {"Vitreus":2, "Potentia": 3, "Victus":1})
-    allComponents['222'] = Component('Saltpetre', 'Dungeon', 3, {"Vitreus":2, "Potentia": 3, "Victus":1})
+    allComponents['200'] = Component('Bone', 'Dungeon', 1, {"Mortus":4, "Examinus": 1})
+    allComponents['201'] = Component('Caustic Ooze', 'Dungeon', 1, {"Limus":3, "Mortus": 2})
+    allComponents['202'] = Component('Goblin Blood', 'Dungeon', 1, {"Lucrum":1, "Telum": 2})
+    allComponents['210'] = Component('Spider Silk', 'Dungeon', 2, {"Vinculum":4, "Venenum": 2})
+    allComponents['211'] = Component('Ectoplasum', 'Dungeon', 2, {"Praecantatio":2, "Mortus":3 , "Examinus": 5})
+    allComponents['212'] = Component('Mimic Tooth', 'Dungeon', 2, {"Fames":3, "Praecantatio": 3})
+    allComponents['220'] = Component('Primordial Fire', 'Dungeon', 3, {"Ignes":6, "Praecantatio": 3})
+    allComponents['221'] = Component('Yeti Fur', 'Dungeon', 3, {"Bestia":3, "Gelum": 5})
+    allComponents['222'] = Component('Dragon Scale', 'Dungeon', 3, {"Lucrum":4, "Ignis": 2, "Tutamen":3})
     
-    test_potion = Potion('test', 'Aqua', {(4,10):'Aqua', (0,3):'Terra', (0,1):'Victus'}, ('Water','Water','Milk'))
-    print(test_potion)
-# materialsDB = {"city":
-#{0:{"Milk":{"Terra":2, "Victus": 1}, "Water":{"Aqua":3}, "Salt":{"Terra":1, "Vitreus":2}},
-#1:{"Pitch":{"Tenebrae":3, "Vinculum":1, "Instramentum":2}, "Saltpetre": {"Vitreus":2, "Potentia":3, "Victus":1}, "Phosporus":{"Lux":4, "Metalum":2}},
-#2:{"Quicksilver": {"Metalum":2, "Motus": 4, "Venenum":2}, "Sulfer": {"Ignis":3, "Potentia":3, "Telum":3}}},
-#"Wilds":{}}
+    allPotions = {}
+    allPotions[0] = Potion('Deathward Potion', 'Mortus', {(4,8):'Mortus', (1,5):'Examinus', (1,5):'Victus'}, ('Bone','Caustic Ooze','Milk'))
+    
+    
+    componentAspects = set()
+    for c in allComponents.values():
+        componentAspects.update(set(c.aspects.keys()))
+
+    potionAspects = set()
+    for p in allPotions.values():
+        potionAspects.add(p.keyAspect)
+    
+    #assert potionAspects == componentAspects, "Error P and C aspects don't agree"
+    
+    menu = True
+    while menu:
+        opt = print_menu()
+        
+        if opt in 'vV':
+            print_aspects(componentAspects)
+            continue
+        elif opt in 'rR':
+            research(allComponents)
+            continue
+        elif opt in 'sS':
+            study(allPotions)
+            continue
+        elif opt in 'bB':
+            pass
+        elif opt in 'qQ':
+            menu = False
+            break
+        else:
+            raise ValueError
+        
