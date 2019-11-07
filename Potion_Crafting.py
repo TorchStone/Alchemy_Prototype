@@ -332,42 +332,44 @@ if __name__=='__main__':
     allComponents = {}
     
     ##CITY##
-    allComponents['000'] = Component('Milk', 'City', 1, {"Terra":2, "Victus": 3})
-    allComponents['001'] = Component('Water', 'City', 1, {"Aqua":4})
-    allComponents['002'] = Component('Salt', 'City', 1, {"Terra":2, "Vitreus": 3})
-    allComponents['010'] = Component('Pitch', 'City', 2, {"Tenebrae":5, "Vinculum": 2, "Instramentum":3})
-    allComponents['011'] = Component('Saltpetre', 'City', 2, {"Vitreus":2, "Potentia": 5, "Victus":3})
-    allComponents['012'] = Component('Phosphorus', 'City', 2, {"Lux": 7, "Metalum": 3})
-    allComponents['020'] = Component('Quicksilver', 'City', 3, {"Metalum":2, "Motus": 8, "Venenum":4})
-    allComponents['021'] = Component('Sulfur', 'City', 3, {"Ignis":6, "Potentia": 5, "Telum":4})
-    allComponents['022'] = Component('Arsenic', 'City', 3, {"Venenum":7, "Mortus": 3, "Telum":5})
+    allComponents['000'] = Component('Milk', 'City', 1, {"Terra":2, "Victus": 3, "Aqua":2})
+    allComponents['001'] = Component('Water', 'City', 1, {"Aqua":5, "Instramentum": 2})
+    allComponents['002'] = Component('Salt', 'City', 1, {"Terra":2, "Vitreus": 3, "Fames":2})
+    allComponents['003'] = Component('Pitch', 'City', 1, {"Tenebrae":3, "Vinculum": 2, "Instramentum":2})
+    allComponents['011'] = Component('Saltpetre', 'City', 2, {"Vitreus":1, "Potentia": 4, "Victus":2})
+    allComponents['012'] = Component('Phosphorus', 'City', 2, {"Lux": 4, "Vitreus": 3})
+    allComponents['020'] = Component('Quicksilver', 'City', 3, {"Lucrum":2, "Voltus":2, "Venenum":2})
+    allComponents['010'] = Component('Sulfur', 'City', 2, {"Ignis":2, "Potentia": 3, "Telum":2})
+    allComponents['022'] = Component('Hemlock Extract', 'City', 3, {"Venenum":4, "Telum":2, "Herba":2})
     
     ##WILDS##
-    allComponents['100'] = Component('lavander', 'Wilds', 1, {"Herba":2, "Victus": 3})
-    allComponents['101'] = Component('Peppermint', 'Wilds', 1, {"Herba":2, "Gelum": 3})
-    allComponents['102'] = Component('Honey', 'Wilds', 1, {"Vinculum":1, "Fames": 2, "Aer": 2})
-    allComponents['110'] = Component('Galena', 'Wilds', 2, {"Metalum":3, "Praecantatio": 5, "Venenum":2})
-    allComponents['111'] = Component('Magnetite', 'Wilds', 2, {"Metalum":5, "Instramentum": 5})
-    allComponents['112'] = Component('Cinnabar', 'Wilds', 2, {"Tutamen":5, "Metalum": 2, "Aer":3})
-    allComponents['120'] = Component('Griffon Talon', 'Wilds', 3, {"Telum":6, "voltus": 6, "Aer":3})
-    allComponents['121'] = Component('Owlbear Further', 'Wilds', 3, {"Bestia":6, "Tutamen": 3, "Aer":6})
-    allComponents['122'] = Component('Treant Bark', 'Wilds', 3, {"Arbor": 7, "Praecantatio": 4, "Victus":4})
+    allComponents['100'] = Component('lavander', 'Wilds', 1, {"Herba":3, "Victus": 4})
+    allComponents['101'] = Component('Peppermint', 'Wilds', 1, {"Herba":3, "Gelum": 4})
+    allComponents['102'] = Component('Honey', 'Wilds', 1, {"Vinculum":3, "Fames": 4})
+    allComponents['103'] = Component('Mana Bean', 'Wilds', 1, {"Arbor":3, "Praecantatio": 4})
+    allComponents['111'] = Component('Magnetite', 'Wilds', 2, {"Terra":3, "Instramentum": 4})
+    allComponents['112'] = Component('Rime Wood', 'Wilds', 2, {"Tutamen":3, "Gelum": 2, "Arbor":2})
+    allComponents['120'] = Component('Griffon Talon', 'Wilds', 3, {"Telum":3, "Voltus": 3, "Lucrum":3})
+    allComponents['110'] = Component('Owlbear Further', 'Wilds', 2, {"Bestia":3, "Tutamen": 2, "Voltus":2})
+    allComponents['121'] = Component('Will-o\'-Wisp Essence', 'Wilds', 3, {"Lux": 4, "Mortus":2, "Examinus": 3})
     
     ##Dungeon##
-    allComponents['200'] = Component('Bone', 'Dungeon', 1, {"Mortus":4, "Examinus": 1})
-    allComponents['201'] = Component('Caustic Ooze', 'Dungeon', 1, {"Limus":4, "Mortus": 1})
-    allComponents['202'] = Component('Goblin Blood', 'Dungeon', 1, {"Lucrum":2, "Telum": 3})
-    allComponents['210'] = Component('Spider Silk', 'Dungeon', 2, {"Vinculum":4, "Venenum": 2, "Aer":4})
-    allComponents['211'] = Component('Ectoplasum', 'Dungeon', 2, {"Praecantatio":3, "Mortus":1 , "Examinus": 6})
-    allComponents['212'] = Component('Mimic Tooth', 'Dungeon', 2, {"Fames":7, "Praecantatio": 3})
-    allComponents['220'] = Component('Primordial Fire', 'Dungeon', 3, {"Ignes":7, "Praecantatio": 6, "Lux":2})
-    allComponents['221'] = Component('Yeti Fur', 'Dungeon', 3, {"Bestia":5, "Gelum": 8, "Aqua": 2})
-    allComponents['222'] = Component('Dragon Scale', 'Dungeon', 3, {"Lucrum":10, "Ignis": 3, "Tutamen":2})
+    allComponents['200'] = Component('Bone', 'Dungeon', 1, {"Mortus":4, "Examinus": 3})
+    allComponents['201'] = Component('Caustic Ooze', 'Dungeon', 1, {"Aqua":4, "Mortus": 3})
+    allComponents['202'] = Component('Rat Tail', 'Dungeon', 1, {"Bestia":4, "Tenebrae": 3, })
+    allComponents['203'] = Component('Spider Silk', 'Dungeon', 1, {"Vinculum":3, "Venenum": 3})
+    allComponents['211'] = Component('Phantom Ectoplasm', 'Dungeon', 2, {"Praecantatio":2, "Examinus": 3, "Gelum":2})
+    allComponents['212'] = Component('Mimic Splinter', 'Dungeon', 2, {"Fames":3, "Praecantatio": 2, "Arbor":2})
+    allComponents['220'] = Component('Primordial Fire', 'Dungeon', 3, {"Ignis":4, "Potentia": 2, "Lux":3})
+    allComponents['210'] = Component('Bailisk Scale', 'Dungeon', 2, {"Tenebrae":3, "Bestia": 2, "Tutamen":2})
+    allComponents['222'] = Component('Dragon Scale', 'Dungeon', 3, {"Lucrum": 5, "Ignis": 2, "Tutamen":2})
     
     allPotions = {}
-    allPotions['0'] = Potion('Deathward Potion', 'Mortus', {'Mortus':(4,8), 'Examinus':(1,5), 'Victus':(1,5)}, ('Bone','Caustic Ooze','Milk'))
-    allPotions['1'] = Potion('Necromancer\'s Poison', 'Examinus', {'Examinus':(5,9), 'Mortus':(3,7), 'Praecantatio':(1,10)}, ('Ectoplasum','Bone','water'))
-    allPotions['2'] = Potion('Slippery Potion', 'Limus', {'Limus':(2,6), 'Aqua':(2,5), 'Gelum':(1,3)}, ('Caustic Ooze','Peppermint','water'))
+    allPotions['0'] = Potion('Deathward Potion', 'Mortus', {'Mortus':(5,8), 'Examinus':(2,4), 'Victus':(2,4)}, ('200','201','100'))
+    allPotions['1'] = Potion('Necromancer\'s Poison', 'Examinus', {'Examinus':(5,7), 'Mortus':(3,5), 'Aqua':(3,5)}, ('211','200','001'))
+    allPotions['2'] = Potion('Animal Friendship Potion', 'Bestia', {'Bestia':(4,8), 'Victus':(2,4), 'Terra':(1,3)}, ('202','110','000'))
+    
+    ### HERE
     allPotions['3'] = Potion('The Philosopher\'s Stone', 'Lucrum', {'Lucrum':(10,15), 'Motus':(4,10), 'Praecantatio':(2,10)}, ('%$#$%!##@$$','@#%$#%$','@#%@##@%@@#'))
     allPotions['4'] = Potion('Strength Potion', 'Telum', {'Telum':(3,10), 'Victus':(2,6), 'Lucrum':(1,4)}, ('Goblin Blood','Griffin Talon','Lavender'))
     allPotions['5'] = Potion('Paralisis Poison', 'Vinculum', {'Vinculum':(4,9), 'Fames':(1,3),'Venenum':(1,4)}, ('Spider Silk','Pitch','honey'))
@@ -375,6 +377,8 @@ if __name__=='__main__':
     allPotions['7'] = Potion('Wisdom Potion', 'Praecantatio', {'Praecantatio':(6,10), 'Victus':(3,7), 'Vitreus':(1,5)}, ('Primordial Fire','Treant Bark','Salt'))
     allPotions['8'] = Potion('Saitey Potion', 'Fames', {'Fames':(5,11), 'Victus':(1,5), 'Praecantatio':(1,5)}, ('Mimic tooth','Honey','Milk'))
     allPotions['9'] = Potion('Cold Resistance Potion', 'Ignis', {'Ignis':(5,11), 'Victus':(1,5), 'Praecantatio':(1,5)}, ('Sulfur','Lavander','Peppermint'))
+    
+    
     componentAspects = set()
     for c in allComponents.values():
         componentAspects.update(set(c.aspects.keys()))
