@@ -68,7 +68,7 @@ class Potion:
         self.tags = {name.lower(), keyAspect.lower()}
         
     def __str__(self):
-        return '{}\n  is associated with {}\n  the recipe is {}\n  and can be brewed with {}'.format(self.name,self.keyAspect,self.recipe,self.rRecipe)
+        return '{}\n  is associated with {}\n  the recipe is {}\n  and can be brewed with {},{}, and {}'.format(self.name,self.keyAspect,self.recipe,self.rRecipe[0],self.rRecipe[1],self.rRecipe[2])
     def brew(self, cauldren):
         assert type(cauldren) == dict, 'Error: Input must be a dictionary'
         for a in self.recipe.keys():
@@ -244,11 +244,15 @@ def brewPotion(allComponents,allPotions,debugToggle):
         cauldren += addition
         print_graph(cauldren)
     answ = input('Brew this Potion?(Y/N): ')
-    for a in cauldren.keys():
-        if cauldren[a] == max(cauldren.values()):
-            keyAsp = a
-            break
-    
+    maxAspect = []
+    for a,v in cauldren.items():
+        if v == max(cauldren.values()):
+            maxAspect.append(a)
+    if len(maxAspect) == 1:
+        keyAsp = maxAspect[0]
+    else:
+        print('Error potion must have 1 key aspect, Canceling Brewing...')
+        answ = 'N'
     if answ in 'Yy':
         found = False
         for p in allPotions.values():
@@ -315,9 +319,15 @@ def view_posible(allComponents,allPotions):
         for a1 in posComp:
             for a2 in posComp:
                 for a3 in posComp:
-                    if potion.brew(a1+a2+a3) and (all((a1 != a2, a1 != a3, a2 != a3)) or mode == 'INCLUSIVE'):
+                    cauldren = a1+a2+a3
+                    if potion.brew(cauldren) and (all((a1 != a2, a1 != a3, a2 != a3)) or mode == 'INCLUSIVE'):
+                        maxAspect = []
+                        for a,v in cauldren.items():
+                            if v == max(cauldren.values()):
+                                maxAspect.append(a)
                         x = {a1.name,a2.name,a3.name}
-                        if x not in combos: combos.append(x)
+                        if x not in combos and len(maxAspect) == 1:
+                            combos.append(x)
         print(combos)
         
     pass
@@ -343,7 +353,7 @@ if __name__=='__main__':
     allComponents['022'] = Component('Hemlock Extract', 'City', 3, {"Venenum":4, "Telum":2, "Herba":2})
     
     ##WILDS##
-    allComponents['100'] = Component('lavander', 'Wilds', 1, {"Herba":3, "Victus": 4})
+    allComponents['100'] = Component('Lavander', 'Wilds', 1, {"Herba":3, "Victus": 4})
     allComponents['101'] = Component('Peppermint', 'Wilds', 1, {"Herba":3, "Gelum": 4})
     allComponents['102'] = Component('Honey', 'Wilds', 1, {"Vinculum":3, "Fames": 4})
     allComponents['103'] = Component('Mana Bean', 'Wilds', 1, {"Arbor":3, "Praecantatio": 4})
@@ -361,22 +371,35 @@ if __name__=='__main__':
     allComponents['211'] = Component('Phantom Ectoplasm', 'Dungeon', 2, {"Praecantatio":2, "Examinus": 3, "Gelum":2})
     allComponents['212'] = Component('Mimic Splinter', 'Dungeon', 2, {"Fames":3, "Praecantatio": 2, "Arbor":2})
     allComponents['220'] = Component('Primordial Fire', 'Dungeon', 3, {"Ignis":4, "Potentia": 2, "Lux":3})
-    allComponents['210'] = Component('Bailisk Scale', 'Dungeon', 2, {"Tenebrae":3, "Bestia": 2, "Tutamen":2})
+    allComponents['210'] = Component('Bailisk Blood', 'Dungeon', 2, {"Tenebrae":3, "Bestia": 2, "Venenum":2})
     allComponents['222'] = Component('Dragon Scale', 'Dungeon', 3, {"Lucrum": 5, "Ignis": 2, "Tutamen":2})
     
     allPotions = {}
-    allPotions['0'] = Potion('Deathward Potion', 'Mortus', {'Mortus':(5,8), 'Examinus':(2,4), 'Victus':(2,4)}, ('200','201','100'))
-    allPotions['1'] = Potion('Necromancer\'s Poison', 'Examinus', {'Examinus':(5,7), 'Mortus':(3,5), 'Aqua':(3,5)}, ('211','200','001'))
-    allPotions['2'] = Potion('Animal Friendship Potion', 'Bestia', {'Bestia':(4,8), 'Victus':(2,4), 'Terra':(1,3)}, ('202','110','000'))
+    allPotions['0'] = Potion('Deathward Potion', 'Mortus', {'Mortus':(5,8), 'Examinus':(2,4), 'Victus':(2,4)}, ('Bone','Caustic Ooze','Lavander'))
+    allPotions['1'] = Potion('Necromancer\'s Poison', 'Examinus', {'Examinus':(5,7), 'Mortus':(3,5), 'Aqua':(3,5)}, ('Phantom Ectoplasm','Bone','Water'))
+    allPotions['2'] = Potion('Animal Friendship Potion', 'Bestia', {'Bestia':(4,8), 'Victus':(2,4), 'Terra':(1,3)}, ('Rat Tail','Owlbear Further','Milk'))
+    allPotions['3'] = Potion('The Philosopher\'s Stone', 'Lucrum', {'Lucrum':(9,10), 'Voltus':(3,6), 'Ignis':(1,3)}, ('Quicksilver','Griffon Talon','Dragon Scale'))
+    allPotions['4'] = Potion('Strength Potion', 'Telum', {'Telum':(3,5), 'Victus':(2,4), 'Potentia':(1,4)}, ('Sulfur','Griffin Talon','Milk'))
+    allPotions['5'] = Potion('Paralisis Poison', 'Vinculum', {'Vinculum':(5,9), 'Fames':(2,4),'Venenum':(1,4)}, ('Spider Silk','Pitch','Honey'))
+    allPotions['6'] = Potion('Assasin\'s Poison', 'Venenum', {'Venenum':(6,9), 'Tenebrae':(2,4), 'Vinculum':(2,5)}, ('Hemlock Extract','Bailisk Blood','Spider Silk'))
+    allPotions['7'] = Potion('Wisdom Potion', 'Praecantatio', {'Praecantatio':(4,6), 'Fames':(2,5), 'Vitreus':(1,5)}, ('Mimic Splinter','Mana Bean','Salt'))
+    allPotions['8'] = Potion('Saitey Potion', 'Fames', {'Fames':(5,8), 'Aqua':(3,5), 'Praecantatio':(1,4)}, ('Mimic Splinter','Honey','Water'))
+    allPotions['9'] = Potion('Cold Resistance Potion', 'Ignis', {'Ignis':(4,7), 'Potentia':(2,6), 'Tutamen':(1,4)}, ('Sulfur','Rime Wood','Primordial Fire'))
+    allPotions['10'] = Potion('Defense Potion', 'Tutamen', {'Tutamen':(4,7), 'Instramentum':(2,5), 'Terra':(2,5)}, ('Magnetite','Rime Wood','Owlbear Further'))
+    allPotions['11'] = Potion('Flying Potion', 'Voltus', {'Voltus':(3,6), 'Praecantatio':(2,4), 'Bestia':(2,5)}, ('Owlbear Further','Griffon Talon','Mana Bean'))
+    allPotions['12'] = Potion('Dexterity Potion', 'Instramentum', {'Instramentum':(5,9), 'Terra':(2,4), 'Aqua':(2,5)}, ('Water','Pitch','Magnetite'))
+    allPotions['13'] = Potion('Flame Resistance Potion', 'Gelum', {'Gelum':(5,7), 'Herba':(2,4), 'Aqua':(3,5)}, ('Peppermin','Water','Rime Wood'))
+    allPotions['14'] = Potion('Health Potion', 'Victus', {'Victus':(6,8), 'Fames':(2,4), 'Terra':(1,4)}, ('Peppermin','Water','Rime Wood'))
+    allPotions['15'] = Potion('Mana Potion', 'Potentia', {'Potentia':(5,8), 'Praecantatio':(3,6), 'Ignis':(1,3)}, ('Mana Bean','Sulfur','Saltpetre'))  #Only 1 Possible Combo
+    allPotions['16'] = Potion('Darkvision Potion', 'Lux', {'Lux':(5,8), 'Tenebrae':(2,4), 'Vitreus':(1,4)}, ('Phosphorus','Will-o\'-Wisp Essence','Pitch'))
+    allPotions['17'] = Potion('Mindvision Potion', 'Vitreus', {'Vitreus':(4,7), 'Victus':(1,4), 'Lux':(2,5)}, ('Phosphorus','Salt','Milk'))
+    allPotions['18'] = Potion('Blinding Poison', 'Tenebrae', {'Tenebrae':(5,9), 'Venenum':(1,4), 'Vinculum':(1,4)}, ('Pitch','Bailisk Blood','Rat Tail'))
+    allPotions['19'] = Potion('Water Breathing Potion', 'Aqua', {'Aqua':(5,8), 'Praecantatio':(2,5), 'Victus':(3,6)}, ('Water','Milk','Rat Tail'))
+    allPotions['20'] = Potion('Slowness Potion', 'Terra', {'Terra':(4,8), 'Vinculum':(1,4), 'Aqua':(1,3)}, ('Magnetite','Milk','Salt'))
+    allPotions['21'] = Potion('Plant Growth Potion', 'Herba', {'Herba':(4,7), 'Victus':(2,5), 'Terra':(1,4)}, ('Lavender','Peppermint','Salt'))
+    allPotions['22'] = Potion('Barkskin Potion', 'Arbor', {'Arbor':(3,8), 'Tutamen':(1,4), 'Praecantatio':(1,4)}, ('Lavander','Rime Wood','Mana Bean'))
     
-    ### HERE
-    allPotions['3'] = Potion('The Philosopher\'s Stone', 'Lucrum', {'Lucrum':(10,15), 'Motus':(4,10), 'Praecantatio':(2,10)}, ('%$#$%!##@$$','@#%$#%$','@#%@##@%@@#'))
-    allPotions['4'] = Potion('Strength Potion', 'Telum', {'Telum':(3,10), 'Victus':(2,6), 'Lucrum':(1,4)}, ('Goblin Blood','Griffin Talon','Lavender'))
-    allPotions['5'] = Potion('Paralisis Poison', 'Vinculum', {'Vinculum':(4,9), 'Fames':(1,3),'Venenum':(1,4)}, ('Spider Silk','Pitch','honey'))
-    allPotions['6'] = Potion('Assasin\'s Poison', 'Venenum', {'Venenum':(6,12), 'Aqua':(2,6), 'Mortus':(2,6)}, ('Arsenic','Galena','Water'))
-    allPotions['7'] = Potion('Wisdom Potion', 'Praecantatio', {'Praecantatio':(6,10), 'Victus':(3,7), 'Vitreus':(1,5)}, ('Primordial Fire','Treant Bark','Salt'))
-    allPotions['8'] = Potion('Saitey Potion', 'Fames', {'Fames':(5,11), 'Victus':(1,5), 'Praecantatio':(1,5)}, ('Mimic tooth','Honey','Milk'))
-    allPotions['9'] = Potion('Cold Resistance Potion', 'Ignis', {'Ignis':(5,11), 'Victus':(1,5), 'Praecantatio':(1,5)}, ('Sulfur','Lavander','Peppermint'))
+    
     
     
     componentAspects = set()
