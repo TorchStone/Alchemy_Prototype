@@ -52,6 +52,9 @@ class Component:
                 add_this[k] = v
         return add_this
     
+    def s_print(self):
+        return '{} - {}, {}, {}'.format(self.name, self.location, str(self.tier + 1), self.aspects)
+    
     
 class Potion:
     def __init__(self, name, keyAspect, recipe, rRecipe):
@@ -66,9 +69,15 @@ class Potion:
         self.recipe = recipe
         self.rRecipe = rRecipe
         self.tags = {name.lower(), keyAspect.lower()}
+        self.discovered = False
         
     def __str__(self):
-        return '{}\n  is associated with {}\n  the recipe is {}\n  and can be brewed with {},{}, and {}'.format(self.name,self.keyAspect,self.recipe,self.rRecipe[0],self.rRecipe[1],self.rRecipe[2])
+        if self.discovered:
+            return '{}\n  is associated with {}\n  and can be brewed with {},{}, and {}'.format(self.name,self.keyAspect,self.rRecipe[0],self.rRecipe[1],self.rRecipe[2])
+        else:
+            return '~ Undiscovered Potion ~'
+            
+    
     def brew(self, cauldren):
         assert type(cauldren) == dict, 'Error: Input must be a dictionary'
         for a in self.recipe.keys():
@@ -78,7 +87,11 @@ class Potion:
         if x == []:
             return False
         else:
+            if all(x): self.discovered = True
             return all(x)
+    
+    def s_print(self):
+        return '{} - {}'.format(self.name, self.recipe)
     
     
 def print_menu(debugToggle):
