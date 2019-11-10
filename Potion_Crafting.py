@@ -53,7 +53,7 @@ class Component:
         return add_this
     
     def s_print(self):
-        return '{} - {}, {}, {}'.format(self.name, self.location, str(self.tier + 1), self.aspects)
+        return '{} - {}, {} - {}'.format(self.name, self.location, str(self.tier + 1), self.aspects)
     
     
 class Potion:
@@ -91,11 +91,11 @@ class Potion:
             return all(x)
     
     def s_print(self):
-        return '{} - {}'.format(self.name, self.recipe)
+        return '{}, {} - {}'.format(self.name, self.keyAspect, self.recipe)
     
     
 def print_menu(debugToggle):
-    if debugToggle: print("DEBUGGING MOD")
+    if debugToggle: print("DEBUGGING MODE")
     print('Alchemy Prototype Menu\n---------------')
     print('  V ~ View Aspects')
     print('  R ~ Research Components')
@@ -103,6 +103,7 @@ def print_menu(debugToggle):
     print('  B ~ Brew a Potion')
     if debugToggle: print("  >C ~ View Combination")
     if debugToggle: print("  >P ~ View Possible Recipes")
+    if debugToggle: print("  >L ~ List all Potions and Components")
     print('  Q ~ Quit\n---------------')
     valid = False
     while valid == False:
@@ -351,6 +352,16 @@ def veiw_ids(IdDict):
         print('{} - {}'.format(i,v.name))
     pass
 
+
+def simplePrint(allComponents,allPotions):
+    for c in allComponents.values():
+        print(c.s_print())
+    print('\n---\n')
+    for p in allPotions.values():
+        print(p.s_print())
+    pass
+
+
 if __name__=='__main__':
     allComponents = {}
     
@@ -452,6 +463,9 @@ if __name__=='__main__':
             continue
         elif opt in 'pP':
             view_posible(allComponents,allPotions)
+            continue
+        elif opt in 'lL':
+            simplePrint(allComponents,allPotions)
             continue
         else:
             raise ValueError
